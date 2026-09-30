@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IMADGAMER — PÁGINA OFICIAL 🎮</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:#05060a;
+  color:#e6eaf2;
+  font-family:'Rajdhani',sans-serif;
+  overflow-x:hidden;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ===== VARIABLES ===== */
+:root{
+  --bg:#05060a;
+  --bg-2:#0a0d15;
+  --panel:rgba(14,18,28,.75);
+  --line:rgba(90,140,255,.15);
+  --blue:#4d9fff;
+  --blue-soft:#7db8ff;
+  --green:#3dff88;
+  --purple:#a86bff;
+  --text:#e6eaf2;
+  --muted:#8892a6;
+  --discord:#5865F2;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#05060a}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#4d9fff,#a86bff);border-radius:10px}
+
+/* ===== SCROLL PROGRESS ===== */
+.scroll-progress{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,#4d9fff,#a86bff,#3dff88);
+  z-index:9999;box-shadow:0 0 12px #4d9fff;
+  transition:width .1s linear;
+}
+
+/* ===== CANVAS PARTICLES ===== */
+#fx-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.7}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  position:fixed;top:0;left:0;width:100%;z-index:1000;
+  padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;
+  transition:all .4s ease;
+  background:transparent;
+}
+.navbar.scrolled{
+  padding:.7rem 2.5rem;background:rgba(5,7,12,.88);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(90,140,255,.2);
+  box-shadow:0 4px 30px rgba(77,159,255,.08);
+}
+.logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.35rem;letter-spacing:6px;color:#fff;text-decoration:none;display:flex;align-items:center;gap:.5rem;user-select:none}
+.logo i{color:#4d9fff;font-style:normal;text-shadow:0 0 20px #4d9fff}
+.nav-links{display:flex;gap:2.2rem;list-style:none}
+.nav-links a{color:#a8b0c2;text-decoration:none;font-weight:600;font-size:.82rem;letter-spacing:2.5px;text-transform:uppercase;position:relative;padding:6px 0;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:0;height:1.5px;width:0;background:linear-gradient(90deg,#4d9fff,#a86bff);box-shadow:0 0 10px #4d9fff;transition:width .3s ease}
+.nav-links a:hover,.nav-links a.active{color:#fff}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-cta{
+  background:linear-gradient(135deg,#5865F2,#4050c8);color:#fff;font-weight:700;font-size:.78rem;
+  padding:.65rem 1.4rem;border-radius:6px;text-decoration:none;letter-spacing:2px;text-transform:uppercase;
+  border:1px solid #7a86ff;box-shadow:0 0 20px #5865F288,inset 0 0 12px #5865F233;
+  transition:all .3s ease;display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap;
+}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 0 32px #5865F2,0 0 60px #5865F2aa}
+.hamburger{display:none;background:none;border:none;flex-direction:column;gap:5px;padding:8px;z-index:1100}
+.hamburger span{display:block;width:26px;height:2px;background:#4d9fff;border-radius:2px;box-shadow:0 0 8px #4d9fff;transition:all .3s ease}
+.hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.active span:nth-child(2){opacity:0}
+.hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:7rem 2rem 4rem;overflow:hidden;z-index:1;
+}
+.hero-scene{
+  position:absolute;inset:0;z-index:-3;
+  background:
+    radial-gradient(ellipse at 20% 30%,rgba(77,159,255,.18) 0%,transparent 55%),
+    radial-gradient(ellipse at 80% 70%,rgba(168,107,255,.15) 0%,transparent 55%),
+    radial-gradient(ellipse at 50% 100%,rgba(61,255,136,.08) 0%,transparent 60%),
+    linear-gradient(180deg,#02040a 0%,#060a18 50%,#040612 100%);
+}
+.hero-city{
+  position:absolute;bottom:0;left:0;right:0;height:42%;z-index:-2;pointer-events:none;
+  background:
+    linear-gradient(180deg,transparent 0%,rgba(2,4,10,.85) 60%,#02040a 100%);
+}
+.hero-city::before{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(to top,#02040a 0%,transparent 40%),
+    repeating-linear-gradient(90deg,
+      transparent 0px,transparent 18px,
+      rgba(10,14,26,.9) 18px,rgba(10,14,26,.9) 42px,
+      transparent 42px,transparent 60px,
+      rgba(8,12,22,.95) 60px,rgba(8,12,22,.95) 95px,
+      transparent 95px,transparent 118px,
+      rgba(12,16,30,.85) 118px,rgba(12,16,30,.85) 145px);
+  -webkit-mask-image:linear-gradient(to top,#000 20%,transparent 90%);
+  mask-image:linear-gradient(to top,#000 20%,transparent 90%);
+  filter:blur(.3px);
+}
+.hero-city::after{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 12% 78%,rgba(77,159,255,.6) 0,transparent 1.5%),
+    radial-gradient(circle at 28% 68%,rgba(168,107,255,.55) 0,transparent 1.2%),
+    radial-gradient(circle at 44% 82%,rgba(61,255,136,.5) 0,transparent 1%),
+    radial-gradient(circle at 62% 72%,rgba(77,159,255,.6) 0,transparent 1.3%),
+    radial-gradient(circle at 78% 80%,rgba(168,107,255,.5) 0,transparent 1.1%),
+    radial-gradient(circle at 92% 74%,rgba(77,159,255,.55) 0,transparent 1.2%);
+  filter:blur(1px);
+  animation:cityFlicker 5s ease-in-out infinite alternate;
+}
+@keyframes cityFlicker{0%,100%{opacity:.75}50%{opacity:1}}
+.hero-smoke{
+  position:absolute;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 30% 90%,rgba(120,150,220,.14) 0%,transparent 70%),
+    radial-gradient(ellipse 50% 30% at 75% 85%,rgba(168,107,255,.12) 0%,transparent 70%);
+  animation:smokeDrift 14s ease-in-out infinite alternate;
+}
+@keyframes smokeDrift{0%{transform:translateX(-2%) scale(1);opacity:.7}100%{transform:translateX(2%) scale(1.08);opacity:1}}
+.hero-vignette{
+  position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 50%,transparent 30%,rgba(2,4,10,.85) 100%);
+}
+.hud{position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.75}
+.hud-corner{position:absolute;width:60px;height:60px;border-color:rgba(77,159,255,.5);border-style:solid;border-width:0;filter:drop-shadow(0 0 6px #4d9fff88)}
+.hud-corner.tl{top:90px;left:30px;border-top-width:1.5px;border-left-width:1.5px}
+.hud-corner.tr{top:90px;right:30px;border-top-width:1.5px;border-right-width:1.5px}
+.hud-corner.bl{bottom:30px;left:30px;border-bottom-width:1.5px;border-left-width:1.5px}
+.hud-corner.br{bottom:30px;right:30px;border-bottom-width:1.5px;border-right-width:1.5px}
+.hud-tag{position:absolute;font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:3px;color:rgba(77,159,255,.7);text-transform:uppercase}
+.hud-tag.tl{top:100px;left:100px}
+.hud-tag.tr{top:100px;right:100px}
+.hud-tag.bl{bottom:100px;left:100px}
+.hud-tag.br{bottom:100px;right:100px}
+.hud-tag.green{color:rgba(61,255,136,.8)}
+.hud-tag.purple{color:rgba(168,107,255,.8)}
+
+.hero-content{position:relative;z-index:3;text-align:center;max-width:1000px;padding:0 1rem}
+.hero-eyebrow{
+  display:inline-block;font-family:'Orbitron',sans-serif;font-size:.7rem;letter-spacing:8px;
+  color:#3dff88;border:1px solid rgba(61,255,136,.4);padding:.5rem 1.4rem;border-radius:2px;
+  margin-bottom:2rem;background:rgba(61,255,136,.05);text-transform:uppercase;
+  box-shadow:0 0 20px rgba(61,255,136,.2)
+}
+.hero-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(3.2rem,13vw,9rem);letter-spacing:12px;line-height:.95;
+  color:#fff;margin-bottom:1.2rem;
+  background:linear-gradient(180deg,#ffffff 30%,#4d9fff 70%,#a86bff 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  text-shadow:0 0 60px rgba(77,159,255,.5);
+  animation:heroGlow 4s ease-in-out infinite alternate;
+}
+@keyframes heroGlow{0%{filter:drop-shadow(0 0 20px rgba(77,159,255,.4))}100%{filter:drop-shadow(0 0 45px rgba(168,107,255,.6))}}
+.hero-tagline{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(1.3rem,3.5vw,2.4rem);
+  letter-spacing:14px;color:#fff;margin-bottom:1rem;
+  text-shadow:0 0 20px rgba(77,159,255,.6),0 0 40px rgba(77,159,255,.3)
+}
+.hero-sub{color:#a8b0c2;font-size:clamp(.95rem,1.6vw,1.15rem);max-width:640px;margin:0 auto 2.6rem;letter-spacing:1px}
+.hero-buttons{display:flex;gap:1.2rem;justify-content:center;flex-wrap:wrap}
+.btn{
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:2.5px;
+  text-transform:uppercase;padding:1rem 2.4rem;border-radius:4px;text-decoration:none;
+  display:inline-flex;align-items:center;gap:.6rem;position:relative;overflow:hidden;
+  transition:all .35s cubic-bezier(.2,.8,.2,1);border:none;cursor:pointer
+}
+.btn-primary{
+  background:linear-gradient(135deg,#4d9fff,#2a6dd9);color:#fff;
+  box-shadow:0 0 24px rgba(77,159,255,.5),inset 0 0 20px rgba(255,255,255,.15);
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 40px #4d9fff,0 0 80px rgba(77,159,255,.6)}
+.btn-primary::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transition:left .6s}
+.btn-primary:hover::before{left:100%}
+.btn-outline{
+  background:rgba(88,101,242,.08);color:#c8cfff;border:1.5px solid #5865F2;
+  box-shadow:0 0 20px rgba(88,101,242,.3)
+}
+.btn-outline:hover{background:rgba(88,101,242,.25);transform:translateY(-3px);box-shadow:0 0 40px #5865F2,0 0 70px rgba(88,101,242,.5);color:#fff}
+.btn-ghost{background:transparent;color:#c8cfff;border:1.5px solid rgba(90,140,255,.35)}
+.btn-ghost:hover{border-color:#4d9fff;background:rgba(77,159,255,.08);color:#fff;transform:translateY(-3px);box-shadow:0 0 30px rgba(77,159,255,.4)}
+.btn .ic{font-size:1.05em;line-height:1}
+
+.scroll-hint{
+  position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:5px;
+  color:#8892a6;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:.6rem;
+  z-index:3;animation:scrollPulse 2.4s ease-in-out infinite
+}
+.scroll-hint .arrow{width:1px;height:36px;background:linear-gradient(180deg,transparent,#4d9fff);position:relative}
+.scroll-hint .arrow::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%) rotate(45deg);width:6px;height:6px;border-right:1.5px solid #4d9fff;border-bottom:1.5px solid #4d9fff}
+@keyframes scrollPulse{0%,100%{opacity:.5;transform:translateX(-50%) translateY(0)}50%{opacity:1;transform:translateX(-50%) translateY(6px)}}
+
+/* ===== SECTIONS COMMON ===== */
+section{position:relative;z-index:2;padding:7rem 2.5rem;max-width:1400px;margin:0 auto}
+.section-head{margin-bottom:4rem;position:relative}
+.section-eyebrow{
+  font-family:'Orbitron',sans-serif;font-size:.68rem;letter-spacing:6px;
+  color:#4d9fff;text-transform:uppercase;display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;
+  text-shadow:0 0 12px rgba(77,159,255,.6)
+}
+.section-eyebrow::before{content:'';width:32px;height:1.5px;background:#4d9fff;box-shadow:0 0 8px #4d9fff}
+.section-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(2rem,5vw,3.6rem);letter-spacing:3px;color:#fff;line-height:1.05;
+  text-shadow:0 0 40px rgba(77,159,255,.25)
+}
+.section-title .accent{color:#4d9fff;text-shadow:0 0 24px #4d9fff}
+.section-desc{color:#8892a6;font-size:1.05rem;max-width:620px;margin-top:1rem;letter-spacing:.5px}
+
+/* ===== GAME SECTIONS ===== */
+.game-block{
+  display:grid;grid-template-columns:1.15fr 1fr;gap:0;
+  background:linear-gradient(135deg,rgba(14,18,28,.7),rgba(8,10,18,.9));
+  border:1px solid rgba(90,140,255,.15);border-radius:8px;overflow:hidden;
+  margin-bottom:3rem;position:relative;
+  transition:all .5s cubic-bezier(.2,.8,.2,1);
+}
+.game-block::before{
+  content:'';position:absolute;inset:0;border-radius:8px;padding:1px;
+  background:linear-gradient(135deg,rgba(77,159,255,.4),transparent 40%,transparent 60%,rgba(168,107,255,.4));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:0;transition:opacity .5s;pointer-events:none;
+}
+.game-block:hover::before{opacity:1}
+.game-block:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(77,159,255,.15)}
+.game-block.reverse{grid-template-columns:1fr 1.15fr}
+.game-block.reverse .game-visual{order:2}
+.game-block.reverse .game-body{order:1}
+
+.game-visual{
+  position:relative;overflow:hidden;min-height:460px;
+  background:
+    radial-gradient(circle at 30% 30%,rgba(77,159,255,.25),transparent 60%),
+    radial-gradient(circle at 70% 70%,rgba(168,107,255,.2),transparent 60%),
+    linear-gradient(135deg,#080b16,#0f1422);
+  display:flex;align-items:center;justify-content:center;
+}
+.game-visual::after{
+  content:'';position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(77,159,255,.03) 3px,rgba(77,159,255,.03) 4px),
+    radial-gradient(ellipse at 50% 100%,rgba(2,4,10,.9),transparent 70%);
+  pointer-events:none;
+}
+.game-visual .art{
+  font-family:'Orbitron',sans-serif;font-size:5rem;color:#4d9fff;opacity:.35;
+  text-shadow:0 0 40px #4d9fff,0 0 80px rgba(77,159,255,.5);
+  transition:transform .8s cubic-bezier(.2,.8,.2,1),opacity .5s;
+  z-index:2;letter-spacing:4px;text-align:center;line-height:1.05;
+}
+.game-block:hover .game-visual .art{transform:scale(1.15);opacity:.55}
+.game-visual .visual-label{
+  position:absolute;top:1.5rem;left:1.5rem;font-family:'Orbitron',sans-serif;
+  font-size:.62rem;letter-spacing:4px;color:rgba(77,159,255,.7);
+  border:1px solid rgba(77,159,255,.3);padding:.35rem .8rem;border-radius:2px;
+  background:rgba(5,7,12,.6);backdrop-filter:blur(6px);z-index:3;
+}
+.game-visual .visual-label.green{color:rgba(61,255,136,.8);border-color:rgba(61,255,136,.35)}
+.game-visual .visual-label.purple{color:rgba(168,107,255,.8);border-color:rgba(168,107,255,.35)}
+
+.game-body{padding:3.2rem 3rem;display:flex;flex-direction:column;justify-content:center}
+.game-series{
+  display:inline-block;font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:5px;
+  color:#3dff88;border:1px solid rgba(61,255,136,.4);padding:.35rem 1rem;border-radius:2px;
+  margin-bottom:1rem;align-self:flex-start;text-transform:uppercase;
+  background:rgba(61,255,136,.05);box-shadow:0 0 16px rgba(61,255,136,.15)
+}
+.game-series.orange{color:#ffb84d;border-color:rgba(255,184,77,.4);background:rgba(255,184,77,.05);box-shadow:0 0 16px rgba(255,184,77,.15)}
+.game-series.purple{color:#a86bff;border-color:rgba(168,107,255,.4);background:rgba(168,107,255,.05);box-shadow:0 0 16px rgba(168,107,255,.15)}
+.game-name{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(1.6rem,3.4vw,2.6rem);letter-spacing:3px;color:#fff;line-height:1.05;
+  margin-bottom:1.2rem;text-shadow:0 0 30px rgba(77,159,255,.25)
+}
+.game-name .accent{color:#4d9fff}
+.game-story{color:#a8b0c2;font-size:1.05rem;line-height:1.75;margin-bottom:1.6rem;letter-spacing:.3px}
+.game-tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:2rem}
+.tag{
+  font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:3px;
+  padding:.4rem .9rem;border-radius:2px;text-transform:uppercase;
+  border:1px solid rgba(90,140,255,.3);color:#a8b0c2;background:rgba(90,140,255,.05);
+  transition:all .3s
+}
+.tag:hover{border-color:#4d9fff;color:#4d9fff;box-shadow:0 0 12px rgba(77,159,255,.3)}
+.game-actions{display:flex;gap:.8rem;flex-wrap:wrap}
+
+.btn-store{
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:2px;
+  text-transform:uppercase;padding:.75rem 1.5rem;border-radius:4px;text-decoration:none;
+  display:inline-flex;align-items:center;gap:.5rem;transition:all .35s cubic-bezier(.2,.8,.2,1);
+  border:1.5px solid;position:relative;overflow:hidden;
+}
+.btn-store .ic{font-size:1.1em;line-height:1}
+.btn-gamejolt{
+  background:rgba(77,159,255,.08);color:#7db8ff;border-color:rgba(77,159,255,.5);
+  box-shadow:0 0 16px rgba(77,159,255,.15)
+}
+.btn-gamejolt:hover{background:rgba(77,159,255,.2);color:#fff;border-color:#4d9fff;box-shadow:0 0 30px #4d9fff,0 0 60px rgba(77,159,255,.5);transform:translateY(-2px)}
+.btn-itch{
+  background:rgba(250,92,138,.08);color:#ff8bb0;border-color:rgba(250,92,138,.5);
+  box-shadow:0 0 16px rgba(250,92,138,.15)
+}
+.btn-itch:hover{background:rgba(250,92,138,.2);color:#fff;border-color:#fa5c8a;box-shadow:0 0 30px #fa5c8a,0 0 60px rgba(250,92,138,.5);transform:translateY(-2px)}
+.btn-disabled{
+  background:rgba(120,130,150,.06);color:#6d7689;border-color:rgba(120,130,150,.3);
+  cursor:not-allowed;opacity:.75
+}
+.btn-disabled:hover{transform:none;box-shadow:none;background:rgba(120,130,150,.06)}
+
+/* ===== OTHER PROJECTS ===== */
+.other-projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-top:3rem}
+.mini-project{
+  background:linear-gradient(160deg,rgba(14,18,28,.85),rgba(8,10,18,.95));
+  border:1px solid rgba(90,140,255,.15);border-radius:6px;padding:1.5rem;
+  transition:all .4s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden;
+}
+.mini-project::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,#4d9fff,transparent);
+  transform:scaleX(0);transition:transform .5s;transform-origin:left
+}
+.mini-project:hover::before{transform:scaleX(1)}
+.mini-project:hover{transform:translateY(-5px);border-color:rgba(77,159,255,.4);box-shadow:0 15px 40px rgba(77,159,255,.12)}
+.mini-img{
+  width:100%;height:110px;border-radius:4px;margin-bottom:1rem;
+  background:
+    radial-gradient(circle at 30% 40%,rgba(77,159,255,.2),transparent 65%),
+    radial-gradient(circle at 70% 60%,rgba(168,107,255,.15),transparent 65%),
+    linear-gradient(135deg,#0a0d16,#121728);
+  display:flex;align-items:center;justify-content:center;font-size:2rem;
+  color:rgba(77,159,255,.4);border:1px solid rgba(90,140,255,.1);
+  transition:transform .5s
+}
+.mini-project:hover .mini-img{transform:scale(1.03)}
+.mini-name{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1.05rem;letter-spacing:2px;color:#fff;margin-bottom:.3rem}
+.mini-genre{font-size:.75rem;letter-spacing:2px;color:#8892a6;text-transform:uppercase;margin-bottom:.9rem}
+.mini-status{
+  display:inline-block;font-family:'Orbitron',sans-serif;font-size:.55rem;letter-spacing:2.5px;
+  padding:.25rem .7rem;border-radius:2px;text-transform:uppercase
+}
+.status-dev{color:#ffb84d;border:1px solid rgba(255,184,77,.4);background:rgba(255,184,77,.06)}
+.status-soon{color:#a86bff;border:1px solid rgba(168,107,255,.4);background:rgba(168,107,255,.06)}
+.status-play{color:#3dff88;border:1px solid rgba(61,255,136,.4);background:rgba(61,255,136,.06)}
+
+/* ===== UNIVERSE ===== */
+.universe{
+  position:relative;padding:8rem 2.5rem;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(77,159,255,.08),transparent 60%),
+    radial-gradient(ellipse at 50% 100%,rgba(168,107,255,.08),transparent 60%);
+  border-top:1px solid rgba(90,140,255,.1);border-bottom:1px solid rgba(90,140,255,.1);
+}
+.universe-inner{max-width:1200px;margin:0 auto;text-align:center;position:relative}
+.universe-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(1.8rem,4.5vw,3rem);letter-spacing:5px;color:#fff;margin-bottom:1rem;
+  text-shadow:0 0 40px rgba(77,159,255,.4)
+}
+.universe-sub{color:#a8b0c2;max-width:640px;margin:0 auto 4rem;font-size:1.05rem}
+.universe-chain{display:flex;flex-direction:column;align-items:center;gap:0;max-width:560px;margin:0 auto}
+.uni-node{
+  font-family:'Orbitron',sans-serif;font-weight:700;letter-spacing:4px;
+  font-size:clamp(.85rem,2vw,1.15rem);color:#fff;padding:1.2rem 2.2rem;
+  border:1px solid rgba(77,159,255,.4);border-radius:4px;
+  background:linear-gradient(135deg,rgba(77,159,255,.06),rgba(5,7,12,.6));
+  backdrop-filter:blur(8px);width:100%;text-align:center;
+  position:relative;transition:all .4s cubic-bezier(.2,.8,.2,1);
+  box-shadow:0 0 20px rgba(77,159,255,.08)
+}
+.uni-node:hover{border-color:#4d9fff;box-shadow:0 0 30px rgba(77,159,255,.35);transform:scale(1.03);color:#4d9fff}
+.uni-node.purple{border-color:rgba(168,107,255,.4)}
+.uni-node.purple:hover{border-color:#a86bff;box-shadow:0 0 30px rgba(168,107,255,.35);color:#a86bff}
+.uni-node.green{border-color:rgba(61,255,136,.4)}
+.uni-node.green:hover{border-color:#3dff88;box-shadow:0 0 30px rgba(61,255,136,.35);color:#3dff88}
+.uni-arrow{
+  font-size:1.4rem;color:#4d9fff;opacity:.6;padding:.5rem 0;
+  animation:uniArrow 2.4s ease-in-out infinite;line-height:1;
+  text-shadow:0 0 12px currentColor
+}
+@keyframes uniArrow{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(6px);opacity:1}}
+.universe-motto{
+  margin-top:4rem;font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(1rem,2.6vw,1.6rem);letter-spacing:8px;color:#4d9fff;
+  text-shadow:0 0 30px #4d9fff,0 0 60px rgba(77,159,255,.4);text-transform:uppercase
+}
+
+/* ===== UPDATES ===== */
+.update-featured{
+  display:grid;grid-template-columns:1.2fr 1fr;gap:0;
+  background:linear-gradient(135deg,rgba(168,107,255,.08),rgba(8,10,18,.95));
+  border:1px solid rgba(168,107,255,.25);border-radius:8px;overflow:hidden;margin-bottom:2rem;
+  position:relative;transition:all .5s
+}
+.update-featured:hover{border-color:rgba(168,107,255,.5);box-shadow:0 20px 60px rgba(168,107,255,.15)}
+.update-visual{
+  position:relative;min-height:400px;
+  background:
+    radial-gradient(circle at 40% 40%,rgba(255,140,60,.25),transparent 60%),
+    radial-gradient(circle at 70% 60%,rgba(168,107,255,.3),transparent 60%),
+    linear-gradient(135deg,#0a0712,#150a1f);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.update-visual .pumpkin{font-size:6rem;filter:drop-shadow(0 0 30px #ff8c3c);animation:pumpkinFloat 4s ease-in-out infinite}
+@keyframes pumpkinFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+.update-visual::after{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 100%,rgba(5,3,12,.9),transparent 70%);
+  pointer-events:none
+}
+.update-body{padding:3rem;display:flex;flex-direction:column;justify-content:center}
+.update-badge{
+  display:inline-block;font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:5px;
+  color:#ff8c3c;border:1px solid rgba(255,140,60,.5);padding:.4rem 1rem;border-radius:2px;
+  margin-bottom:1.2rem;align-self:flex-start;background:rgba(255,140,60,.08);
+  box-shadow:0 0 20px rgba(255,140,60,.25);text-transform:uppercase
+}
+.update-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(1.5rem,3vw,2.2rem);letter-spacing:3px;color:#fff;line-height:1.1;margin-bottom:1rem
+}
+.update-title .hl{color:#ff8c3c}
+.update-desc{color:#a8b0c2;font-size:1rem;margin-bottom:1.5rem;line-height:1.7}
+.update-features{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:2rem}
+.up-feat{
+  font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:2.5px;
+  color:#c8cfff;padding:.6rem .9rem;border:1px solid rgba(168,107,255,.25);border-radius:3px;
+  background:rgba(168,107,255,.05);text-transform:uppercase;transition:all .3s
+}
+.up-feat:hover{border-color:#a86bff;color:#a86bff;box-shadow:0 0 14px rgba(168,107,255,.3)}
+
+.updates-secondary{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.update-card{
+  background:linear-gradient(160deg,rgba(14,18,28,.85),rgba(8,10,18,.95));
+  border:1px solid rgba(90,140,255,.15);border-radius:6px;padding:1.8rem;
+  transition:all .4s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden
+}
+.update-card:hover{transform:translateY(-4px);border-color:rgba(77,159,255,.4);box-shadow:0 15px 40px rgba(77,159,255,.12)}
+.update-card .date{font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:3px;color:#4d9fff;margin-bottom:.6rem;text-transform:uppercase}
+.update-card .cat{display:inline-block;font-size:.6rem;letter-spacing:2px;color:#8892a6;border:1px solid rgba(90,140,255,.2);padding:.2rem .6rem;border-radius:2px;margin-bottom:.8rem;text-transform:uppercase}
+.update-card h4{font-family:'Orbitron',sans-serif;font-size:1rem;letter-spacing:1.5px;color:#fff;margin-bottom:.7rem;line-height:1.3}
+.update-card p{color:#8892a6;font-size:.9rem;line-height:1.6;margin-bottom:1.2rem}
+
+/* ===== SOCIAL BIG ===== */
+.social-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem}
+.social-block{
+  background:linear-gradient(160deg,rgba(14,18,28,.85),rgba(8,10,18,.95));
+  border:1px solid rgba(90,140,255,.15);border-radius:8px;padding:2rem 1.6rem;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  position:relative;overflow:hidden;transition:all .4s cubic-bezier(.2,.8,.2,1)
+}
+.social-block::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:var(--accent,#4d9fff);transform:scaleX(0);transition:transform .5s;transform-origin:left;
+  box-shadow:0 0 20px var(--accent,#4d9fff)
+}
+.social-block:hover::before{transform:scaleX(1)}
+.social-block:hover{transform:translateY(-6px);border-color:var(--accent,#4d9fff);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 30px var(--accent-soft,rgba(77,159,255,.25))}
+.social-block.yt{--accent:#ff2a2a;--accent-soft:rgba(255,42,42,.25)}
+.social-block.dc{--accent:#5865F2;--accent-soft:rgba(88,101,242,.25)}
+.social-block.tt{--accent:#3dff88;--accent-soft:rgba(61,255,136,.25)}
+.social-block.tw{--accent:#a86bff;--accent-soft:rgba(168,107,255,.25)}
+.soc-icon{font-size:2.4rem;margin-bottom:1.2rem;filter:drop-shadow(0 0 12px var(--accent,#4d9fff));transition:transform .4s}
+.social-block:hover .soc-icon{transform:scale(1.15) translateY(-3px)}
+.soc-name{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1rem;letter-spacing:3px;color:#fff;margin-bottom:.6rem}
+.soc-desc{color:#8892a6;font-size:.85rem;margin-bottom:1.5rem;line-height:1.6;flex:1}
+.btn-soc{
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.75rem;letter-spacing:2.5px;
+  text-transform:uppercase;padding:.7rem 1.4rem;border-radius:3px;text-decoration:none;
+  border:1.5px solid var(--accent,#4d9fff);color:var(--accent,#4d9fff);
+  background:transparent;transition:all .3s;display:inline-flex;align-items:center;gap:.4rem
+}
+.btn-soc:hover{background:var(--accent,#4d9fff);color:#05060a;box-shadow:0 0 24px var(--accent,#4d9fff);transform:translateY(-2px)}
+
+/* ===== YOUTUBE SECTION ===== */
+.yt-section{
+  background:
+    radial-gradient(ellipse at 20% 30%,rgba(255,42,42,.08),transparent 60%),
+    radial-gradient(ellipse at 80% 70%,rgba(255,42,42,.05),transparent 60%);
+  border-top:1px solid rgba(255,42,42,.1);border-bottom:1px solid rgba(255,42,42,.1);
+  padding:8rem 2.5rem
+}
+.yt-inner{max-width:1200px;margin:0 auto;text-align:center}
+.yt-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem}
+.yt-card{
+  background:linear-gradient(160deg,rgba(20,14,16,.9),rgba(10,8,10,.95));
+  border:1px solid rgba(255,42,42,.15);border-radius:6px;overflow:hidden;
+  transition:all .4s cubic-bezier(.2,.8,.2,1);text-decoration:none;display:block
+}
+.yt-card:hover{transform:translateY(-6px);border-color:rgba(255,42,42,.5);box-shadow:0 20px 50px rgba(255,42,42,.15)}
+.yt-thumb{
+  height:160px;display:flex;align-items:center;justify-content:center;position:relative;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(255,42,42,.2),transparent 60%),
+    linear-gradient(135deg,#0a0608,#140a0e);
+  border-bottom:1px solid rgba(255,42,42,.1)
+}
+.yt-thumb .play{
+  width:52px;height:52px;border-radius:50%;background:rgba(255,42,42,.9);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;
+  box-shadow:0 0 30px rgba(255,42,42,.7);transition:all .3s
+}
+.yt-card:hover .play{transform:scale(1.15);box-shadow:0 0 50px rgba(255,42,42,1)}
+.yt-meta{padding:1.3rem 1.5rem}
+.yt-label{font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:3px;color:#ff2a2a;margin-bottom:.4rem;text-transform:uppercase}
+.yt-name{color:#fff;font-weight:700;font-size:1rem;letter-spacing:1px}
+.yt-hint{color:#6d7689;font-size:.8rem;margin-top:.3rem}
+
+/* ===== DISCORD BIG ===== */
+.discord-section{
+  position:relative;padding:9rem 2.5rem;text-align:center;overflow:hidden;
+  background:
+    radial-gradient(ellipse at 50% 50%,rgba(88,101,242,.15),transparent 65%),
+    linear-gradient(180deg,#05060a,#080a16)
+}
+.discord-section::before,.discord-section::after{
+  content:'';position:absolute;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(88,101,242,.25),transparent 70%);
+  filter:blur(40px);animation:dcFloat 12s ease-in-out infinite alternate
+}
+.discord-section::before{width:300px;height:300px;top:10%;left:5%}
+.discord-section::after{width:400px;height:400px;bottom:5%;right:5%;animation-delay:2s;background:radial-gradient(circle,rgba(168,107,255,.2),transparent 70%)}
+@keyframes dcFloat{0%{transform:translate(0,0) scale(1)}100%{transform:translate(30px,-30px) scale(1.1)}}
+.discord-inner{position:relative;z-index:2;max-width:800px;margin:0 auto}
+.discord-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:clamp(2rem,5.5vw,3.6rem);letter-spacing:5px;color:#fff;margin-bottom:1rem;
+  text-shadow:0 0 40px #5865F2,0 0 80px rgba(88,101,242,.5)
+}
+.discord-sub{color:#a8b0c2;font-size:1.15rem;margin-bottom:3rem;max-width:600px;margin-left:auto;margin-right:auto}
+.btn-discord-xl{
+  font-family:'Orbitron',sans-serif;font-weight:700;font-size:1rem;letter-spacing:4px;
+  text-transform:uppercase;padding:1.4rem 3.5rem;border-radius:6px;text-decoration:none;
+  display:inline-flex;align-items:center;gap:.8rem;
+  background:linear-gradient(135deg,#5865F2,#4050c8);color:#fff;border:2px solid #7a86ff;
+  box-shadow:0 0 30px #5865F2aa,0 0 60px #5865F255,inset 0 0 30px rgba(255,255,255,.1);
+  transition:all .4s cubic-bezier(.2,.8,.2,1);position:relative;overflow:hidden
+}
+.btn-discord-xl:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 0 50px #5865F2,0 0 100px #5865F2aa,inset 0 0 40px rgba(255,255,255,.2)}
+.btn-discord-xl::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);transition:left .7s}
+.btn-discord-xl:hover::before{left:100%}
+
+/* ===== ABOUT ===== */
+.about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:4rem;align-items:center}
+.about-text-block p{color:#a8b0c2;font-size:1.1rem;line-height:1.9;margin-bottom:1.5rem}
+.about-cats{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-top:2rem}
+.about-cat{
+  padding:1.4rem;border:1px solid rgba(90,140,255,.15);border-radius:6px;
+  background:linear-gradient(160deg,rgba(14,18,28,.7),rgba(8,10,18,.9));
+  transition:all .4s
+}
+.about-cat:hover{border-color:rgba(77,159,255,.4);transform:translateY(-4px);box-shadow:0 12px 30px rgba(77,159,255,.1)}
+.about-cat .icon{font-size:1.6rem;margin-bottom:.6rem;display:block}
+.about-cat .lbl{font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:2.5px;color:#4d9fff;margin-bottom:.3rem}
+.about-cat .sub{color:#8892a6;font-size:.85rem}
+.about-visual{
+  position:relative;aspect-ratio:1;max-width:420px;justify-self:center;
+  background:
+    radial-gradient(circle at 50% 50%,rgba(77,159,255,.15),transparent 60%),
+    linear-gradient(135deg,#0a0d16,#10141f);
+  border:1px solid rgba(90,140,255,.2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 60px rgba(77,159,255,.1),inset 0 0 60px rgba(77,159,255,.05)
+}
+.about-visual::before{
+  content:'';position:absolute;inset:-20px;border-radius:50%;
+  border:1px dashed rgba(77,159,255,.2);animation:spin 30s linear infinite
+}
+.about-visual::after{
+  content:'';position:absolute;inset:-40px;border-radius:50%;
+  border:1px dashed rgba(168,107,255,.15);animation:spin 40s linear infinite reverse
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.about-visual .glyph{font-size:5rem;filter:drop-shadow(0 0 30px #4d9fff)}
+
+/* ===== CONTACT ===== */
+.contact-inner{text-align:center;max-width:700px;margin:0 auto}
+.contact-buttons{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem}
+.btn-contact{
+  font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:2.5px;
+  text-transform:uppercase;padding:.9rem 1.8rem;border-radius:4px;text-decoration:none;
+  display:inline-flex;align-items:center;gap:.5rem;transition:all .35s;border:1.5px solid;
+}
+.btn-contact.dc{color:#7a86ff;border-color:rgba(88,101,242,.5);background:rgba(88,101,242,.06)}
+.btn-contact.dc:hover{background:rgba(88,101,242,.25);color:#fff;box-shadow:0 0 30px rgba(88,101,242,.6);transform:translateY(-3px)}
+.btn-contact.yt{color:#ff6b6b;border-color:rgba(255,42,42,.5);background:rgba(255,42,42,.06)}
+.btn-contact.yt:hover{background:rgba(255,42,42,.25);color:#fff;box-shadow:0 0 30px rgba(255,42,42,.6);transform:translateY(-3px)}
+.btn-contact.tw{color:#c39bff;border-color:rgba(168,107,255,.5);background:rgba(168,107,255,.06)}
+.btn-contact.tw:hover{background:rgba(168,107,255,.25);color:#fff;box-shadow:0 0 30px rgba(168,107,255,.6);transform:translateY(-3px)}
+
+/* ===== FOOTER ===== */
+footer{
+  position:relative;z-index:2;padding:4rem 2.5rem 2rem;
+  background:linear-gradient(180deg,#030409,#05060a);
+  border-top:1px solid rgba(90,140,255,.15)
+}
+.footer-inner{max-width:1400px;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-brand .logo{font-size:1.6rem;margin-bottom:1rem}
+.footer-brand p{color:#6d7689;font-size:.9rem;max-width:280px;line-height:1.7}
+.footer-col h5{font-family:'Orbitron',sans-serif;font-size:.7rem;letter-spacing:3px;color:#4d9fff;margin-bottom:1.2rem;text-transform:uppercase}
+.footer-col ul{list-style:none}
+.footer-col ul li{margin-bottom:.7rem}
+.footer-col ul a{color:#8892a6;text-decoration:none;font-size:.9rem;transition:all .3s;letter-spacing:.5px}
+.footer-col ul a:hover{color:#4d9fff;text-shadow:0 0 12px rgba(77,159,255,.6)}
+.footer-bottom{
+  padding-top:2rem;border-top:1px solid rgba(90,140,255,.1);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem
+}
+.footer-bottom p{color:#4a5468;font-size:.82rem;letter-spacing:.5px}
+.footer-status{display:flex;gap:1.5rem;align-items:center;font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:2px;color:#6d7689;text-transform:uppercase}
+.footer-status .dot{width:6px;height:6px;border-radius:50%;background:#3dff88;box-shadow:0 0 10px #3dff88;display:inline-block;animation:pulseDot 2s ease-in-out infinite}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ===== REVEAL ===== */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1100px){
+  .social-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-top{grid-template-columns:1fr 1fr;gap:2rem}
+}
+@media(max-width:900px){
+  .navbar{padding:1rem 1.5rem}
+  .nav-links{
+    position:fixed;top:0;right:-100%;width:80%;max-width:340px;height:100vh;
+    background:rgba(5,7,12,.98);backdrop-filter:blur(20px);
+    flex-direction:column;align-items:center;justify-content:center;gap:2rem;
+    transition:right .45s cubic-bezier(.2,.8,.2,1);
+    border-left:1px solid rgba(90,140,255,.25);box-shadow:-20px 0 60px rgba(0,0,0,.5);
+    z-index:1050
+  }
+  .nav-links.open{right:0}
+  .nav-links a{font-size:1rem;letter-spacing:3px}
+  .nav-cta{display:none}
+  .hamburger{display:flex}
+  section{padding:5rem 1.5rem}
+  .game-block,.game-block.reverse{grid-template-columns:1fr}
+  .game-block.reverse .game-visual{order:0}
+  .game-block.reverse .game-body{order:1}
+  .game-visual{min-height:280px}
+  .game-body{padding:2rem 1.8rem}
+  .about-grid{grid-template-columns:1fr;gap:2.5rem}
+  .about-visual{max-width:280px}
+  .update-featured{grid-template-columns:1fr}
+  .update-visual{min-height:240px}
+  .update-body{padding:2rem}
+  .updates-secondary{grid-template-columns:1fr}
+  .yt-cards{grid-template-columns:1fr}
+  .discord-section{padding:6rem 1.5rem}
+  .btn-discord-xl{padding:1.1rem 2rem;font-size:.85rem;letter-spacing:2px}
+  .footer-top{grid-template-columns:1fr;gap:2rem}
+  .footer-bottom{flex-direction:column;text-align:center}
+  .hero-title{letter-spacing:6px}
+  .hero-tagline{letter-spacing:8px}
+  .hud-corner{display:none}
+  .hud-tag{display:none}
+}
+@media(max-width:600px){
+  .social-grid{grid-template-columns:1fr}
+  .about-cats{grid-template-columns:1fr}
+  .hero-eyebrow{letter-spacing:4px;font-size:.6rem;padding:.4rem 1rem}
+  .hero-title{letter-spacing:4px}
+  .hero-tagline{letter-spacing:5px;font-size:1.2rem}
+  .hero-buttons{flex-direction:column;align-items:stretch}
+  .hero-buttons .btn{justify-content:center}
+  .btn{padding:.9rem 1.5rem;font-size:.85rem}
+  .section-title{letter-spacing:2px}
+  .universe-chain{max-width:100%}
+  .uni-node{padding:1rem 1.2rem;font-size:.78rem;letter-spacing:2px}
+  .universe-motto{letter-spacing:4px;font-size:.95rem}
+  .update-features{grid-template-columns:1fr}
+  .game-actions{flex-direction:column;align-items:stretch}
+  .btn-store{justify-content:center}
+  .contact-buttons{flex-direction:column;align-items:stretch}
+  .btn-contact{justify-content:center}
+  .discord-title{letter-spacing:2px}
+  .scroll-hint{font-size:.55rem;letter-spacing:3px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- PARTICLES -->
+<canvas id="fx-canvas"></canvas>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <a href="#top" class="logo">IMAD<i>GAMER</i></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#top" class="nav-link">INICIO</a></li>
+    <li><a href="#juegos" class="nav-link">JUEGOS</a></li>
+    <li><a href="#universo" class="nav-link">UNIVERSO</a></li>
+    <li><a href="#actualizaciones" class="nav-link">ACTUALIZACIONES</a></li>
+    <li><a href="#comunidad" class="nav-link">COMUNIDAD</a></li>
+    <li><a href="#redes" class="nav-link">REDES</a></li>
+  </ul>
+  <a href="https://discord.gg/vdcusHvV8" target="_blank" rel="noopener" class="nav-cta">💬 DISCORD</a>
+  <button class="hamburger" id="hamburger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-scene"></div>
+  <div class="hero-city"></div>
+  <div class="hero-smoke"></div>
+  <div class="hero-vignette"></div>
+
+  <div class="hud">
+    <div class="hud-corner tl"></div>
+    <div class="hud-corner tr"></div>
+    <div class="hud-corner bl"></div>
+    <div class="hud-corner br"></div>
+    <div class="hud-tag tl">SYS // ONLINE</div>
+    <div class="hud-tag tr green">BUILD 2026.01</div>
+    <div class="hud-tag bl purple">UNIVERSO IMADGAMER</div>
+    <div class="hud-tag br">v.1.0.4</div>
+  </div>
+
+  <div class="hero-content">
+    <span class="hero-eyebrow">// ESTUDIO INDEPENDIENTE</span>
+    <h1 class="hero-title">IMADGAMER</h1>
+    <p class="hero-tagline">JUEGOS. HISTORIAS. CAOS.</p>
+    <p class="hero-sub">El universo de juegos creado por ImadGamer.</p>
+    <div class="hero-buttons">
+      <a href="#juegos" class="btn btn-primary"><span class="ic">🎮</span> EXPLORAR JUEGOS</a>
+      <a href="https://discord.gg/vdcusHvV8" target="_blank" rel="noopener" class="btn btn-outline"><span class="ic">💬</span> UNIRSE A DISCORD</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>DESPLÁZATE PARA EXPLORAR</span>
+    <div class="arrow"></div>
+  </div>
+</header>
+
+<!-- JUEGOS -->
+<section id="juegos">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">// ARCHIVO DE JUEGOS</div>
+    <h2 class="section-title">MIS <span class="accent">JUEGOS</span></h2>
+    <p class="section-desc">Historias, supervivencia, acción y caos.</p>
+  </div>
+
+  <!-- CITY OF DECAY -->
+  <article class="game-block reveal">
+    <div class="game-visual">
+      <span class="visual-label">SERIE REBORN // CAP.01</span>
+      <div class="art">CITY<br>OF<br>DECAY</div>
+    </div>
+    <div class="game-body">
+      <span class="game-series">SERIE REBORN</span>
+      <h3 class="game-name">CITY OF DECAY: <span class="accent">REBORN 1</span></h3>
+      <p class="game-story">El mundo cayó. La infección comenzó. Ahora solo queda sobrevivir.</p>
+      <div class="game-tags">
+        <span class="tag">HORROR</span>
+        <span class="tag">SUPERVIVENCIA</span>
+        <span class="tag">HISTORIA</span>
+      </div>
+      <div class="game-actions">
+        <a href="https://gamejolt.com/games/CITYOFDECAY_REBORN1/1103339" target="_blank" rel="noopener" class="btn-store btn-gamejolt"><span class="ic">🎮</span> GAME JOLT</a>
+        <a href="https://imad-gamer14.itch.io/city-of-decay-reborn-1" target="_blank" rel="noopener" class="btn-store btn-itch"><span class="ic">🕹️</span> ITCH.IO</a>
+      </div>
+    </div>
+  </article>
+
+  <!-- SHADOW PROTOCOL -->
+  <article class="game-block reverse reveal">
+    <div class="game-visual">
+      <span class="visual-label purple">OUTBREAK // ACTIVE</span>
+      <div class="art" style="color:#a86bff;text-shadow:0 0 40px #a86bff,0 0 80px rgba(168,107,255,.5)">SHADOW<br>PROTOCOL</div>
+    </div>
+    <div class="game-body">
+      <span class="game-series purple">OUTBREAK</span>
+      <h3 class="game-name">SHADOW <span class="accent" style="color:#a86bff;text-shadow:0 0 24px #a86bff">PROTOCOL</span></h3>
+      <p class="game-story">Entra en el campo de batalla.</p>
+      <div class="game-tags">
+        <span class="tag">SHOOTER</span>
+        <span class="tag">ACCIÓN</span>
+        <span class="tag">ZOMBIES</span>
+      </div>
+      <div class="game-actions">
+        <a href="https://gamejolt.com/games/SHADOW_PROTOCOL14/1099504" target="_blank" rel="noopener" class="btn-store btn-gamejolt"><span class="ic">🎮</span> GAME JOLT</a>
+        <a href="https://imad-gamer14.itch.io/shadow-protocol" target="_blank" rel="noopener" class="btn-store btn-itch"><span class="ic">🕹️</span> ITCH.IO</a>
+      </div>
+    </div>
+  </article>
+
+  <!-- FLIGHT CHAOS -->
+  <article class="game-block reveal">
+    <div class="game-visual">
+      <span class="visual-label green">EN DESARROLLO</span>
+      <div class="art" style="color:#3dff88;text-shadow:0 0 40px #3dff88,0 0 80px rgba(61,255,136,.5)">FLIGHT<br>CHAOS</div>
+    </div>
+    <div class="game-body">
+      <span class="game-series orange">EN DESARROLLO</span>
+      <h3 class="game-name">FLIGHT <span class="accent" style="color:#3dff88;text-shadow:0 0 24px #3dff88">CHAOS</span></h3>
+      <p class="game-story">El avión está fallando.<br>Los motores están ardiendo.<br>Y ahora depende de ti.</p>
+      <div class="game-tags">
+        <span class="tag">MULTIJUGADOR</span>
+        <span class="tag">AVIACIÓN</span>
+        <span class="tag">CAOS</span>
+      </div>
+      <div class="game-actions">
+        <span class="btn-store btn-disabled"><span class="ic">⏳</span> PRÓXIMAMENTE</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- OTROS PROYECTOS -->
+  <div class="section-head reveal" style="margin-top:6rem;margin-bottom:0">
+    <div class="section-eyebrow">// LABORATORIO</div>
+    <h2 class="section-title">OTROS <span class="accent">PROYECTOS</span></h2>
+    <p class="section-desc">Prototipos, ideas y proyectos en exploración.</p>
+  </div>
+
+  <div class="other-projects">
+    <div class="mini-project reveal">
+      <div class="mini-img">🌊</div>
+      <h4 class="mini-name">NEON ABYSS</h4>
+      <p class="mini-genre">Exploración / Misterio</p>
+      <span class="mini-status status-dev">EN DESARROLLO</span>
+    </div>
+    <div class="mini-project reveal">
+      <div class="mini-img">⚡</div>
+      <h4 class="mini-name">VOIDSTRIKE</h4>
+      <p class="mini-genre">Acción / Sci-Fi</p>
+      <span class="mini-status status-soon">PRÓXIMAMENTE</span>
+    </div>
+    <div class="mini-project reveal">
+      <div class="mini-img">🏎️</div>
+      <h4 class="mini-name">SPEED RUSH</h4>
+      <p class="mini-genre">Carreras / Arcade</p>
+      <span class="mini-status status-soon">PRÓXIMAMENTE</span>
+    </div>
+    <div class="mini-project reveal">
+      <div class="mini-img">🌆</div>
+      <h4 class="mini-name">BROOKLYN CITY RP</h4>
+      <p class="mini-genre">Rol / Multijugador</p>
+      <span class="mini-status status-dev">EN DESARROLLO</span>
+    </div>
+    <div class="mini-project reveal">
+      <div class="mini-img">🔫</div>
+      <h4 class="mini-name">GUN BLASTER</h4>
+      <p class="mini-genre">Shooter / Acción</p>
+      <span class="mini-status status-dev">EN DESARROLLO</span>
+    </div>
+    <div class="mini-project reveal">
+      <div class="mini-img">🧟</div>
+      <h4 class="mini-name">CITY OF DECAY — ROBLOX</h4>
+      <p class="mini-genre">Supervivencia / Multijugador</p>
+      <span class="mini-status status-dev">EN DESARROLLO</span>
+    </div>
+  </div>
+</section>
+
+<!-- UNIVERSO -->
+<section class="universe" id="universo">
+  <div class="universe-inner">
+    <div class="section-eyebrow" style="justify-content:center;display:flex">// CONEXIÓN DE MUNDOS</div>
+    <h2 class="universe-title reveal">EL UNIVERSO DE IMADGAMER</h2>
+    <p class="universe-sub reveal">Cada juego tiene su propia identidad. El universo de ImadGamer sigue creciendo.</p>
+
+    <div class="universe-chain reveal">
+      <div class="uni-node">CITY OF DECAY: REBORN</div>
+      <div class="uni-arrow">↓</div>
+      <div class="uni-node purple">SHADOW PROTOCOL</div>
+      <div class="uni-arrow" style="color:#a86bff">↓</div>
+      <div class="uni-node green">FLIGHT CHAOS</div>
+    </div>
+
+    <p class="universe-motto reveal">DIFERENTES JUEGOS. DIFERENTES HISTORIAS. UN UNIVERSO.</p>
+  </div>
+</section>
+
+<!-- ACTUALIZACIONES -->
+<section id="actualizaciones">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">// ÚLTIMAS NOTICIAS</div>
+    <h2 class="section-title">ÚLTIMAS <span class="accent">ACTUALIZACIONES</span></h2>
+    <p class="section-desc">Lo último sobre los proyectos de ImadGamer.</p>
+  </div>
+
+  <!-- FEATURED -->
+  <article class="update-featured reveal">
+    <div class="update-visual">
+      <div class="pumpkin">🎃</div>
+    </div>
+    <div class="update-body">
+      <span class="update-badge">// EVENTO ESPECIAL</span>
+      <h3 class="update-title">🎃 SHADOW PROTOCOL<br><span class="hl">HALLOWEEN UPDATE</span></h3>
+      <p class="update-desc">Una nueva amenaza llega al campo de batalla.</p>
+      <div class="update-features">
+        <span class="up-feat">NUEVOS MODOS</span>
+        <span class="up-feat">NUEVO BOSS</span>
+        <span class="up-feat">EVENTO HALLOWEEN</span>
+        <span class="up-feat">NUEVOS PERSONAJES</span>
+      </div>
+      <a href="https://gamejolt.com/games/SHADOW_PROTOCOL14/1099504" target="_blank" rel="noopener" class="btn-store btn-gamejolt" style="align-self:flex-start"><span class="ic">🎮</span> VER ACTUALIZACIÓN</a>
+    </div>
+  </article>
+
+  <!-- SECONDARY -->
+  <div class="updates-secondary">
+    <article class="update-card reveal">
+      <div class="date">🏙️ CAPÍTULO 1</div>
+      <span class="cat">CITY OF DECAY: REBORN 1</span>
+      <h4>REMASTERIZADO</h4>
+      <p>El Capítulo 1 regresa con un nuevo diseño y una experiencia de terror mejorada.</p>
+      <a href="https://imad-gamer14.itch.io/city-of-decay-reborn-1" target="_blank" rel="noopener" class="btn-store btn-itch" style="padding:.55rem 1.2rem;font-size:.72rem"><span class="ic">🕹️</span> VER JUEGO</a>
+    </article>
+    <article class="update-card reveal">
+      <div class="date">✈️ EN DESARROLLO</div>
+      <span class="cat">FLIGHT CHAOS</span>
+      <h4>AVANCES DEL PROYECTO</h4>
+      <p>El desarrollo continúa en la experiencia multijugador de aviación llena de caos.</p>
+      <span class="btn-store btn-disabled" style="padding:.55rem 1.2rem;font-size:.72rem;align-self:flex-start"><span class="ic">⏳</span> PRÓXIMAMENTE</span>
+    </article>
+  </div>
+</section>
+
+<!-- YOUTUBE -->
+<section class="yt-section" id="youtube">
+  <div class="yt-inner">
+    <div class="section-eyebrow" style="justify-content:center;display:flex">// CANAL OFICIAL</div>
+    <h2 class="section-title reveal" style="text-align:center">▶️ IMADGAMER EN <span style="color:#ff2a2a;text-shadow:0 0 24px #ff2a2a">YOUTUBE</span></h2>
+    <p class="section-desc reveal" style="margin:1rem auto 2.5rem;text-align:center">Vídeos, gameplays, trailers, actualizaciones, proyectos y mucho más.</p>
+    <a href="https://www.youtube.com/@ImadGamer-14" target="_blank" rel="noopener" class="btn btn-primary reveal" style="background:linear-gradient(135deg,#ff2a2a,#b80000);box-shadow:0 0 24px rgba(255,42,42,.5),inset 0 0 20px rgba(255,255,255,.15)">
+      <span class="ic">▶</span> VER CANAL DE YOUTUBE
+    </a>
+
+    <div class="yt-cards">
+      <a href="https://www.youtube.com/@ImadGamer-14" target="_blank" rel="noopener" class="yt-card reveal">
+        <div class="yt-thumb"><div class="play">▶</div></div>
+        <div class="yt-meta">
+          <div class="yt-label">// ÚLTIMO VÍDEO</div>
+          <div class="yt-name">Contenido reciente del canal</div>
+          <div class="yt-hint">Estructura lista para vídeo real</div>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/@ImadGamer-14" target="_blank" rel="noopener" class="yt-card reveal">
+        <div class="yt-thumb"><div class="play">▶</div></div>
+        <div class="yt-meta">
+          <div class="yt-label">// TRAILER</div>
+          <div class="yt-name">Trailers oficiales</div>
+          <div class="yt-hint">Estructura lista para vídeo real</div>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/@ImadGamer-14" target="_blank" rel="noopener" class="yt-card reveal">
+        <div class="yt-thumb"><div class="play">▶</div></div>
+        <div class="yt-meta">
+          <div class="yt-label">// ACTUALIZACIÓN</div>
+          <div class="yt-name">Noticias y avances</div>
+          <div class="yt-hint">Estructura lista para vídeo real</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DISCORD -->
+<section class="discord-section" id="comunidad">
+  <div class="discord-inner">
+    <div class="section-eyebrow" style="justify-content:center;display:flex;color:#7a86ff">// COMUNIDAD OFICIAL</div>
+    <h2 class="discord-title reveal">💬 ÚNETE A LA COMUNIDAD</h2>
+    <p class="discord-sub reveal">Noticias, actualizaciones, juegos, eventos y comunidad.</p>
+    <a href="https://discord.gg/vdcusHvV8" target="_blank" rel="noopener" class="btn-discord-xl reveal">💬 UNIRME AL DISCORD</a>
+  </div>
+</section>
+
+<!-- REDES -->
+<section id="redes">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">// SIGUE EL UNIVERSO</div>
+    <h2 class="section-title">SIGUE EL <span class="accent">UNIVERSO</span></h2>
+    <p class="section-desc">Toda la actividad de ImadGamer en un solo lugar.</p>
+  </div>
+
+  <div class="social-grid">
+    <div class="social-block yt reveal">
+      <div class="soc-icon">▶️</div>
+      <h3 class="soc-name">YOUTUBE</h3>
+      <p class="soc-desc">Vídeos, trailers, gameplays y contenido gaming.</p>
+      <a href="https://www.youtube.com/@ImadGamer-14" target="_blank" rel="noopener" class="btn-soc">VER CANAL</a>
+    </div>
+    <div class="social-block dc reveal">
+      <div class="soc-icon">💬</div>
+      <h3 class="soc-name">DISCORD</h3>
+      <p class="soc-desc">Únete a la comunidad oficial de ImadGamer.</p>
+      <a href="https://discord.gg/vdcusHvV8" target="_blank" rel="noopener" class="btn-soc">UNIRSE</a>
+    </div>
+    <div class="social-block tt reveal">
+      <div class="soc-icon">🎵</div>
+      <h3 class="soc-name">TIKTOK</h3>
+      <p class="soc-desc">Clips, momentos y contenido corto.</p>
+      <a href="https://www.tiktok.com/@imad.gamer14" target="_blank" rel="noopener" class="btn-soc">SEGUIR</a>
+    </div>
+    <div class="social-block tw reveal">
+      <div class="soc-icon">🎥</div>
+      <h3 class="soc-name">TWITCH</h3>
+      <p class="soc-desc">Directos y streams de videojuegos.</p>
+      <a href="https://www.twitch.tv/imadgamer14" target="_blank" rel="noopener" class="btn-soc">VER DIRECTOS</a>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE MÍ -->
+<section id="sobre-mi">
+  <div class="section-head reveal">
+    <div class="section-eyebrow">// PERFIL DEL CREADOR</div>
+    <h2 class="section-title">¿QUIÉN ES <span class="accent">IMADGAMER</span>?</h2>
+  </div>
+
+  <div class="about-grid">
+    <div class="about-text-block reveal">
+      <p>ImadGamer es un creador independiente centrado en videojuegos, contenido gaming y mundos originales.</p>
+      <p>El objetivo es construir experiencias propias, historias auténticas y una comunidad que crezca junto a cada proyecto.</p>
+      <div class="about-cats">
+        <div class="about-cat">
+          <span class="icon">🎮</span>
+          <div class="lbl">VIDEOJUEGOS</div>
+          <div class="sub">Proyectos originales</div>
+        </div>
+        <div class="about-cat">
+          <span class="icon">🎬</span>
+          <div class="lbl">CONTENIDO</div>
+          <div class="sub">Vídeos y directos</div>
+        </div>
+        <div class="about-cat">
+          <span class="icon">🌐</span>
+          <div class="lbl">COMUNIDAD</div>
+          <div class="sub">Jugadores y seguidores</div>
+        </div>
+        <div class="about-cat">
+          <span class="icon">🚀</span>
+          <div class="lbl">NUEVOS PROYECTOS</div>
+          <div class="sub">Siempre en marcha</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual reveal">
+      <span class="glyph">🎮</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="section-head reveal" style="text-align:center">
+    <div class="section-eyebrow" style="justify-content:center;display:flex">// CONTACTO</div>
+    <h2 class="section-title">📩 <span class="accent">CONTACTO</span></h2>
+    <p class="section-desc" style="margin:1rem auto 0;text-align:center">¿Tienes una idea, quieres colaborar o simplemente quieres contactar conmigo?</p>
+  </div>
+
+  <div class="contact-buttons reveal">
+    <a href="https://discord.gg/vdcusHvV8" target="_blank" rel="noopener" class="btn-contact dc">💬 DISCORD</a>
+    <a href="https://www.youtube.com/@ImadGamer-14" target="_blank" rel="noopener" class="btn-contact yt">▶️ YOUTUBE</a>
+    <a href="https://www.twitch.tv/imadgamer14" target="_blank" rel="noopener" class="btn-contact tw">🎥 TWITCH</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#top" class="logo">IMAD<i>GAMER</i></a>
+        <p>Juegos • Contenido • Comunidad<br>Universo independiente en constante expansión.</p>
+      </div>
+      <div class="footer-col">
+        <h5>NAVEGAR</h5>
+        <ul>
+          <li><a href="#top">INICIO</a></li>
+          <li><a href="#juegos">JUEGOS</a></li>
+          <li><a href="#universo">UNIVERSO</a></li>
+          <li><a href="#actualizaciones">ACTUALIZACIONES</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>COMUNIDAD</h5>
+        <ul>
+          <li><a href="#comunidad">DISCORD</a></li>
+          <li><a href="#redes">REDES</a></li>
+          <li><a href="#sobre-mi">SOBRE MÍ</a></li>
+          <li><a href="#contacto">CONTACTO</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>SÍGUEME</h5>
+        <ul>
+          <li><a href="https://www.youtube.com/@ImadGamer-14" target="_blank" rel="noopener">YOUTUBE</a></li>
+          <li><a href="https://discord.gg/vdcusHvV8" target="_blank" rel="noopener">DISCORD</a></li>
+          <li><a href="https://www.tiktok.com/@imad.gamer14" target="_blank" rel="noopener">TIKTOK</a></li>
+          <li><a href="https://www.twitch.tv/imadgamer14" target="_blank" rel="noopener">TWITCH</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 ImadGamer. Todos los derechos reservados.</p>
+      <div class="footer-status">
+        <span><span class="dot"></span> SISTEMA OPERATIVO</span>
+        <span>BUILD 2026.01</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ===== PARTICLES ===== */
+(function(){
+  const c=document.getElementById('fx-canvas');
+  const ctx=c.getContext('2d');
+  let w,h,parts=[];
+  const COUNT=80;
+  function resize(){w=c.width=innerWidth;h=c.height=innerHeight;}
+  function init(){
+    parts=[];
+    for(let i=0;i<COUNT;i++){
+      parts.push({
+        x:Math.random()*w,y:Math.random()*h,
+        r:Math.random()*1.6+0.4,
+        vx:(Math.random()-0.5)*0.25,vy:(Math.random()-0.5)*0.25,
+        a:Math.random()*0.5+0.15,
+        p:Math.random()*Math.PI*2,
+        ps:Math.random()*0.02+0.005,
+        c:Math.random()>0.6?'168,107,255':(Math.random()>0.5?'61,255,136':'77,159,255')
+      });
+    }
+  }
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(const p of parts){
+      p.x+=p.vx;p.y+=p.vy;p.p+=p.ps;
+      if(p.x<0)p.x=w; if(p.x>w)p.x=0;
+      if(p.y<0)p.y=h; if(p.y>h)p.y=0;
+      const al=p.a*(0.55+0.45*Math.sin(p.p));
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${p.c},${al})`;
+      ctx.shadowColor=`rgba(${p.c},${al})`;
+      ctx.shadowBlur=10;
+      ctx.fill();
+    }
+    ctx.shadowBlur=0;
+    requestAnimationFrame(draw);
+  }
+  resize();init();draw();
+  addEventListener('resize',()=>{resize();init();});
+})();
+
+/* ===== NAVBAR SCROLL + PROGRESS + ACTIVE LINK ===== */
+(function(){
+  const nav=document.getElementById('navbar');
+  const bar=document.getElementById('scrollProgress');
+  const links=document.querySelectorAll('.nav-link');
+  const sections=['top','juegos','universo','actualizaciones','comunidad','redes'];
+  function onScroll(){
+    const y=scrollY;
+    if(y>40) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+    const max=document.documentElement.scrollHeight-innerHeight;
+    bar.style.width=((y/max)*100)+'%';
+    let current='top';
+    sections.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el && el.getBoundingClientRect().top<=innerHeight*0.4) current=id;
+    });
+    links.forEach(l=>{
+      const href=l.getAttribute('href').replace('#','');
+      l.classList.toggle('active',href===current);
+    });
+  }
+  addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+})();
+
+/* ===== HAMBURGER ===== */
+(function(){
+  const h=document.getElementById('hamburger');
+  const n=document.getElementById('navLinks');
+  h.addEventListener('click',()=>{h.classList.toggle('active');n.classList.toggle('open');});
+  document.querySelectorAll('.nav-link').forEach(a=>a.addEventListener('click',()=>{
+    h.classList.remove('active');n.classList.remove('open');
+  }));
+  document.addEventListener('click',e=>{
+    if(n.classList.contains('open')&&!n.contains(e.target)&&!h.contains(e.target)){
+      h.classList.remove('active');n.classList.remove('open');
+    }
+  });
+})();
+
+/* ===== REVEAL ON SCROLL ===== */
+(function(){
+  const io=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      }
+    });
+  },{threshold:0.12,rootMargin:'0px 0px -60px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+})();
+
+/* ===== HERO PARALLAX ===== */
+(function(){
+  const content=document.querySelector('.hero-content');
+  const city=document.querySelector('.hero-city');
+  if(!content) return;
+  addEventListener('scroll',()=>{
+    const y=scrollY;
+    if(y<innerHeight){
+      content.style.transform=`translateY(${y*0.18}px)`;
+      content.style.opacity=String(1-(y/(innerHeight*0.95)));
+      if(city) city.style.transform=`translateY(${y*0.25}px)`;
+    }
+  },{passive:true});
+})();
+
+/* ===== SMOOTH SCROLL FOR #top ===== */
+document.querySelectorAll('a[href="#top"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>
